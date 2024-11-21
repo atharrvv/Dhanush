@@ -19,8 +19,8 @@ pipeline {
         stage('Build images') {
             steps {
                 script {
-                    docker.build('eatherv/frontend', './frontend')
-                    docker.build('eatherv/backend', './backend')
+                    // docker.build('eatherv/frontend', './frontend')
+                    // docker.build('eatherv/backend', './backend')
                     docker.build('eatherv/database', './database')
                 }
             }
