@@ -12,7 +12,7 @@ pipeline {
                 git branch: 'main', credentialsId: 'git', url: 'https://github.com/atharrvv/react-product-app.git'
             }
         }
-        stage ('azure login) {
+        stage ('azure login') {
             steps {
                 script {
                     sh '''
