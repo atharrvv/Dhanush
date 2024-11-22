@@ -1,27 +1,47 @@
 pipeline {
     agent any
+    environment {
+        AZURE_CLIENT_ID = credentials('AZURE_CLIENT_ID')
+        AZURE_CLIENT_SECRET = credentials('AZURE_CLIENT_SECRET')
+        AZURE_TENANT_ID = credentials('AZURE_TENANT_ID')
+        AZURE_SUBSCRIPTION_ID = credentials('AZURE_SUBSCRIPTION_ID')
+    }
     stages {
         stage('git checkout') {
             steps {
                 git branch: 'main', credentialsId: 'git', url: 'https://github.com/atharrvv/react-product-app.git'
             }
         }
-        stage('vault') {
+        stage ('azure login) {
             steps {
                 script {
-                    sh 'export MYSQL_ROOT_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-ROOT-PASSWORD" --query "value" -o tsv)'
-                    sh 'export MYSQL_USER=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-USER" --query "value" -o tsv)'
-                    sh 'export MYSQL_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-PASSWORD" -o tsv)'
-                    sh 'export MYSQL_DATABASE=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-DATABASE" -o tsv)'
+                    sh '''
+                    az login --service-principal \
+                        --username $AZURE_CLIENT_ID \
+                        --password $AZURE_CLIENT_SECRET \
+                        --tenant $AZURE_TENANT_ID
+                    echo "Successfully logged in to Azure."
+                    az account show
+                    '''
                 }
             }
         }
+        // stage('vault') {
+        //     steps {
+        //         script {
+        //             sh 'export MYSQL_ROOT_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-ROOT-PASSWORD" --query "value" -o tsv)'
+        //             sh 'export MYSQL_USER=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-USER" --query "value" -o tsv)'
+        //             sh 'export MYSQL_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-PASSWORD" -o tsv)'
+        //             sh 'export MYSQL_DATABASE=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-DATABASE" -o tsv)'
+        //         }
+        //     }
+        // }
         stage('Build images') {
             steps {
                 script {
                     // docker.build('eatherv/frontend', './frontend')
                     // docker.build('eatherv/backend', './backend')
-                    docker.build('eatherv/database', './database')
+                    // docker.build('eatherv/database', './database')
                 }
             }
         }
