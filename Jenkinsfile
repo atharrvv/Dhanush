@@ -58,23 +58,23 @@ pipeline {
         //     }
         // }
         
-        stage('Creating Container') {
-            steps {
-                script {
-                    def dbCpntainer = docker
-                        .image('eatherv/database')
-                        .run('-d -p 3306:3306 --name database -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DATABASE}')
+        // stage('Creating Container') {
+        //     steps {
+        //         script {
+        //             def dbCpntainer = docker
+        //                 .image('eatherv/database')
+        //                 .run('-d -p 3306:3306 --name database -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DATABASE}')
                     
-                    // def backEnd = docker
-                    //     .image('eatherv/backend')
-                    //     .run('-d -p 8080:8080 --name backend')
+        //             def backEnd = docker
+        //                 .image('eatherv/backend')
+        //                 .run('-d -p 8080:8080 --name backend')
                         
-                    // def frontEnd = docker
-                    //     .image('eatherv/frontend')
-                    //     .run('-d -p 3000:80 --name frontend')
-                }
-            }
-        }
+        //             def frontEnd = docker
+        //                 .image('eatherv/frontend')
+        //                 .run('-d -p 3000:80 --name frontend')
+        //         }
+        //     }
+        // }
         // stage ('Image to DockerHub') {
         //     steps {
         //         script {
