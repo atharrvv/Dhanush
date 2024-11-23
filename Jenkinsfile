@@ -1,40 +1,30 @@
 pipeline {
     agent any
-    // environment {
-    //     AZURE_CLIENT_ID = credentials('AZURE_CLIENT_ID')
-    //     AZURE_CLIENT_SECRET = credentials('AZURE_CLIENT_SECRET')
-    //     AZURE_TENANT_ID = credentials('AZURE_TENANT_ID')
-    // }
     stages {
         stage('git checkout') {
             steps {
                 git branch: 'main', credentialsId: 'git', url: 'https://github.com/atharrvv/react-product-app.git'
             }
         }
-        stage ('azure login') {
+        stage('Azure login') {
             steps {
-                script {
-                    sh '''
-                    az login --service-principal \
-                        --username "bf8b3f40-649a-4ba6-9564-f24c3841c6ca" \
-                        --password "iRK8Q~fkLX7k8ewTTh7q~Zkf3pV_qiA4MncQoc-L" \
-                        --tenant "d3f47893-5a40-4c35-8758-698ada11b86e"
-                    echo "Successfully logged in to Azure."
-                    az account show
-                    '''
+                withCredentials([azureServicePrincipal('AZURE_PRICIPLE')]) {
+                    sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+                    sh 'az account set -s $AZURE_SUBSCRIPTION_ID'
+                    sh 'az resource list'
                 }
             }
         }
-        // stage('vault') {
-        //     steps {
-        //         script {
-        //             sh 'export MYSQL_ROOT_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-ROOT-PASSWORD" --query "value" -o tsv)'
-        //             sh 'export MYSQL_USER=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-USER" --query "value" -o tsv)'
-        //             sh 'export MYSQL_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-PASSWORD" -o tsv)'
-        //             sh 'export MYSQL_DATABASE=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-DATABASE" -o tsv)'
-        //         }
-        //     }
-        // }
+        stage('vault') {
+            steps {
+                script {
+                    sh 'export MYSQL_ROOT_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-ROOT-PASSWORD" --query "value" -o tsv)'
+                    sh 'export MYSQL_USER=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-USER" --query "value" -o tsv)'
+                    sh 'export MYSQL_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-PASSWORD" -o tsv)'
+                    sh 'export MYSQL_DATABASE=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-DATABASE" -o tsv)'
+                }
+            }
+        }
         // stage('Build images') {
         //     steps {
         //         script {
@@ -85,12 +75,7 @@ pipeline {
         //         }
         //     }
         // }
-        // 
-        // stage('Cleanup') {
-        //     steps {
-        //         cleanWs()  // This removes files and workspace after the job
-        //     }
-        // }
     }
 }
+
 
