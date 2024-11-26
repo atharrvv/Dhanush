@@ -1,5 +1,11 @@
 pipeline {
     agent any
+        environment {
+        MYSQL_ROOT_PASSWORD = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-ROOT-PASSWORD" --query "value" -o tsv', returnStdout: true).trim()
+        MYSQL_USER = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-USER" --query "value" -o tsv', returnStdout: true).trim()
+        MYSQL_PASSWORD = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-PASSWORD" -o tsv', returnStdout: true).trim()
+        MYSQL_DATABASE = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-DATABASE" -o tsv', returnStdout: true).trim()
+    }
     stages {
         stage('git checkout') {
             steps {
@@ -15,13 +21,13 @@ pipeline {
                 }
             }
         }
-        stage('vault') {
+        stage('trial') {
             steps {
                 script {
-                    sh 'export MYSQL_ROOT_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-ROOT-PASSWORD" --query "value" -o tsv)'
-                    sh 'export MYSQL_USER=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-USER" --query "value" -o tsv)'
-                    sh 'export MYSQL_PASSWORD=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-PASSWORD" -o tsv)'
-                    sh 'export MYSQL_DATABASE=$(az keyvault secret show --vault-name "dhanush" --name "MYSQL-DATABASE" -o tsv)'
+                    echo "MYSQL_ROOT_PASSWORD: ${env.MYSQL_ROOT_PASSWORD}"
+                    echo "MYSQL_USER: ${env.MYSQL_USER}"
+                    echo "MYSQL_PASSWORD: ${env.MYSQL_PASSWORD}"
+                    echo "MYSQL_DATABASE: ${env.MYSQL_DATABASE}"
                 }
             }
         }
