@@ -1,36 +1,12 @@
 pipeline {
     agent any
-        environment {
-        MYSQL_ROOT_PASSWORD = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-ROOT-PASSWORD" --query "value" -o tsv', returnStdout: true).trim()
-        MYSQL_USER = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-USER" --query "value" -o tsv', returnStdout: true).trim()
-        MYSQL_PASSWORD = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-PASSWORD" -o tsv', returnStdout: true).trim()
-        MYSQL_DATABASE = sh(script: 'az keyvault secret show --vault-name "dhanush" --name "MYSQL-DATABASE" -o tsv', returnStdout: true).trim()
-    }
     stages {
         stage('git checkout') {
             steps {
                 git branch: 'main', credentialsId: 'git', url: 'https://github.com/atharrvv/react-product-app.git'
             }
         }
-        stage('Azure login') {
-            steps {
-                withCredentials([azureServicePrincipal('AZURE_PRICIPLE')]) {
-                    sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-                    sh 'az account set -s $AZURE_SUBSCRIPTION_ID'
-                    sh 'az resource list'
-                }
-            }
-        }
-        stage('trial') {
-            steps {
-                script {
-                    echo "MYSQL_ROOT_PASSWORD: ${env.MYSQL_ROOT_PASSWORD}"
-                    echo "MYSQL_USER: ${env.MYSQL_USER}"
-                    echo "MYSQL_PASSWORD: ${env.MYSQL_PASSWORD}"
-                    echo "MYSQL_DATABASE: ${env.MYSQL_DATABASE}"
-                }
-            }
-        }
+
         // stage('Build images') {
         //     steps {
         //         script {
