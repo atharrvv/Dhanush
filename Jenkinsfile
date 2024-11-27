@@ -1,11 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('git checkout') {
-            steps {
-                git branch: 'main', credentialsId: 'git', url: 'https://github.com/atharrvv/react-product-app.git'
-            }
-        }
         stage('Build images') {
             steps {
                 script {
@@ -15,7 +10,6 @@ pipeline {
                 }
             }
         }
-        
         // stage('Docker hub') {
         //     steps {
         //         script {
