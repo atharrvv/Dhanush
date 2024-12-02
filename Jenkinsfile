@@ -6,7 +6,6 @@ pipeline {
                 script {
                     docker.build('eatherv/frontend', './frontend')
                     docker.build('eatherv/backend', './backend')
-                    docker.build('eatherv/database', './database')
                 }
             }
         }
@@ -25,17 +24,15 @@ pipeline {
         stage('Creating Container') {
             steps {
                 script {
-                    def dbCpntainer = docker
-                        .image('eatherv/database')
-                        .run('-d -p 3306:3306 --name database ')
+
+                    def frontEnd = docker
+                        .image('eatherv/frontend')
+                        .run('-d -p 3000:80 --name frontend')
                     
                     def backEnd = docker
                         .image('eatherv/backend')
                         .run('-d -p 8080:8080 --name backend')
-                        
-                    def frontEnd = docker
-                        .image('eatherv/frontend')
-                        .run('-d -p 3000:80 --name frontend')
+
                 }
             }
         }
