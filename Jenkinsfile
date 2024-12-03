@@ -27,11 +27,11 @@ pipeline {
 
                     def frontEnd = docker
                         .image('eatherv/frontend')
-                        .run('-d -p 3000:80 --name frontend')
+                        .run('-d -p 3000:80 --name frontendd')
                     
                     def backEnd = docker
                         .image('eatherv/backend')
-                        .run('-d -p 8080:8080 --name backend')
+                        .run('-d -p 8080:8080 --name backendd')
 
                 }
             }
