@@ -29,7 +29,7 @@ pipeline {
         stage('Docker hub') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'Docker') {
                         docker.image("eatherv/frontend:latest").push()
                         docker.image("eatherv/backend:latest").push()
                     }
