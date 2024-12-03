@@ -30,8 +30,8 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker') {
-                        docker.image("eatherv/frontendd:latest").push()
-                        docker.image("eatherv/backendd:latest").push()
+                        docker.image("eatherv/frontend:latest").push()
+                        docker.image("eatherv/backend:latest").push()
                     }
                 }
             }
