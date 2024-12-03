@@ -9,17 +9,6 @@ pipeline {
                 }
             }
         }
-        // stage('Docker hub') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry('https://index.docker.io/v1/', 'docker') {
-        //                 docker.image("eatherv/frontend:latest").push()
-        //                 docker.image("eatherv/backend:latest").push()
-        //                 docker.image("eatherv/database:latest").push()
-        //             }
-        //         }
-        //     }
-        // }
         
         stage('Creating Container') {
             steps {
@@ -33,6 +22,17 @@ pipeline {
                         .image('eatherv/backend')
                         .run('-d -p 8080:8080 --name backendd')
 
+                }
+            }
+        }
+
+        stage('Docker hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker') {
+                        docker.image("eatherv/frontendd:latest").push()
+                        docker.image("eatherv/backendd:latest").push()
+                    }
                 }
             }
         }
