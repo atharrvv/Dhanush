@@ -1,53 +1,55 @@
 pipeline {
     agent any
     stages {
+        stage('AZ login') {
+            steps {
+                script {
+                    // Hardcoded Service Principal credentials
+                    def appId = 'bf8b3f40-649a-4ba6-9564-f24c3841c6ca'
+                    def password = 'iRK8Q~fkLX7k8ewTTh7q~Zkf3pV_qiA4MncQoc-L'
+                    def tenantId = 'd3f47893-5a40-4c35-8758-698ada11b86e'
+                    // Azure login using Service Principal
+                    sh """
+                    az login --service-principal \
+                    -u ${appId} \
+                    -p ${password} \
+                    --tenant ${tenantId}
+                    az acr login --name keanu
+                    """
+                }
+            }
+        }
         stage('Build images') {
             steps {
                 script {
-                    docker.build('eatherv/frontend', './frontend')
-                    docker.build('eatherv/backend', './backend')
+                    docker.build('keanu.azurecr.io/frontend-h', './frontend')
+                    docker.build('keanu.azurecr.io/backend-h', './backend')
                 }
             }
         }
-        
-        stage('Creating Container') {
+        stage('ACR Push') {
             steps {
                 script {
-
-                    def frontEnd = docker
-                        .image('eatherv/frontend')
-                        .run('-d -p 3000:80 --name frontend')
-                    
-                    def backEnd = docker
-                        .image('eatherv/backend')
-                        .run('-d -p 8080:8080 --name backend')
-
-                }
-            }
-        }
-
-        stage('Docker hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker') {
-                        docker.image("eatherv/frontend:latest").push()
-                        docker.image("eatherv/backend:latest").push()
+                    sh """
+                    docker push keanu.azurecr.io/frontend-h
+                    docker push keanu.azurecr.io/backend-h
+                    """
                     }
                 }
             }
-        }
-        // stage ('Image to DockerHub') {
+        // stage ('AKS') {
         //     steps {
-        //         script {
-        //             withCredentials([usernamePassword(credentialsId: DOCKER_JENKINS, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-        //                 sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-        //                 // Push the image
-        //                 sh "docker push eatherv/frontend:latest"
-        //             }
+        //         script{
+        //             sh """
+        //             az aks get-credentials --resource-group group --name rolex
+        //             kubectl apply -f frontend-deployment.yaml
+        //             kubectl apply -f backend-deployment.yaml
+        //             """
+                    
         //         }
         //     }
         // }
+        
     }
 }
-
 
