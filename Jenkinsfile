@@ -37,18 +37,18 @@ pipeline {
                     }
                 }
             }
-        // stage ('AKS') {
-        //     steps {
-        //         script{
-        //             sh """
-        //             az aks get-credentials --resource-group group --name rolex
-        //             kubectl apply -f frontend-deployment.yaml
-        //             kubectl apply -f backend-deployment.yaml
-        //             """
+        stage ('AKS') {
+            steps {
+                script{
+                    sh """
+                    az aks get-credentials --resource-group group --name rolex
+                    kubectl apply -f frontend-h.yaml
+                    kubectl apply -f backend-h.yaml
+                    """
                     
-        //         }
-        //     }
-        // }
+                }
+            }
+        }
         
     }
 }
