@@ -1,16 +1,26 @@
 pipeline {
     agent any
     stages {
-        stage ('AZ login') {
+        stage('Docker hub') {
             steps {
                 script {
-                    withCredentials([azureServicePrincipal('azure_principle')]) {
-                        sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
-                        sh  'az acr login --name keanu'
-                        }
+                    docker.withRegistry('https://keanu.azurecr.io', 'acr') {
+                        docker.image("eatherv/frontend:latest").push()
+                        docker.image("eatherv/backend:latest").push()
                     }
                 }
             }
+        }
+        // stage ('AZ login') {
+        //     steps {
+        //         script {
+        //             withCredentials([azureServicePrincipal('azure_principle')]) {
+        //                 sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+        //                 sh  'az acr login --name keanu'
+        //                 }
+        //             }
+        //         }
+        //     }
         // stage('Build images') {
         //     steps {
         //         script {
@@ -29,17 +39,17 @@ pipeline {
         //             }
         //         }
         //     }
-        stage ('kubectl apply') {
-            steps {
-                script {
-                    withCredentials([azureServicePrincipal('azure_principle')]){
-                        sh 'az aks get-credentials --resource-group group --name rolex'
-                        sh 'kubectl apply -f /home/chris/backend-h.yaml'
-                        sh 'kubectl apply -f /home/chris/frontend-h.yaml'
-                    }
-                }
-            }
-        }
+        // stage ('kubectl apply') {
+        //     steps {
+        //         script {
+        //             withCredentials([azureServicePrincipal('azure_principle')]){
+        //                 sh 'az aks get-credentials --resource-group group --name rolex'
+        //                 sh 'kubectl apply -f /home/chris/backend-h.yaml'
+        //                 sh 'kubectl apply -f /home/chris/frontend-h.yaml'
+        //             }
+        //         }
+        //     }
+        // }
         // stage ('AKS') {
         //     steps {
         //         script{
