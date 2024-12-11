@@ -4,8 +4,8 @@ pipeline {
         stage('Build images') {
             steps {
                 script {
-                    docker.build('eatherv/frontend', './frontend')
-                    docker.build('eatherv/backend', './backend')
+                    docker.build('eatherv/frontenda', './frontend')
+                    docker.build('eatherv/backenda', './backend')
                 }
             }
         }
@@ -15,27 +15,27 @@ pipeline {
                 script {
 
                     def frontEnd = docker
-                        .image('eatherv/frontend')
-                        .run('-d -p 3000:80 --name frontend')
+                        .image('eatherv/frontenda')
+                        .run('-d -p 3000:80 --name frontenda')
                     
                     def backEnd = docker
-                        .image('eatherv/backend')
-                        .run('-d -p 8080:8080 --name backend')
+                        .image('eatherv/backenda')
+                        .run('-d -p 8080:8080 --name backenda')
 
                 }
             }
         }
 
-        stage('Docker hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker') {
-                        docker.image("eatherv/frontend:latest").push()
-                        docker.image("eatherv/backend:latest").push()
-                    }
-                }
-            }
-        }
+        // stage('Docker hub') {
+        //     steps {
+        //         script {
+        //             docker.withRegistry('https://index.docker.io/v1/', 'docker') {
+        //                 docker.image("eatherv/frontend:latest").push()
+        //                 docker.image("eatherv/backend:latest").push()
+        //             }
+        //         }
+        //     }
+        // }
         // stage ('Image to DockerHub') {
         //     steps {
         //         script {
