@@ -29,6 +29,17 @@ pipeline {
         //             }
         //         }
         //     }
+        stage ('kubectl apply') {
+            steps {
+                script {
+                    withCredentials([azureServicePrincipal('azure_principle')]){
+                        sh 'az aks get-credentials --resource-group group --name rolex'
+                        sh 'kubectl apply -f /home/chris/backend-h.yaml'
+                        sh 'kubectl apply -f /home/chris/frontend-h.yaml'
+                    }
+                }
+            }
+        }
         // stage ('AKS') {
         //     steps {
         //         script{
