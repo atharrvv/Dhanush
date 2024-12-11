@@ -42,8 +42,8 @@ pipeline {
                 script{
                     sh """
                     az aks get-credentials --resource-group group --name rolex
-                    sudo kubectl apply -f /root/backend-h.yaml
-                    sudo kubectl apply -f /root/frontend-h.yaml
+                    kubectl apply -f /root/backend-h.yaml
+                    kubectl apply -f /root/frontend-h.yaml
                     
                     """
                     
