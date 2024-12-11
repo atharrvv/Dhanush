@@ -2,12 +2,14 @@ pipeline {
     agent any
     stages {
         stage ('login') {
-            script {
-                withCredentials([azureServicePrincipal('azure_principle')]) {
-                    sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+            steps {
+                script {
+                    withCredentials([azureServicePrincipal('azure_principle')]) {
+                        sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
+                        }
+                    }
                 }
             }
-        }
         // stage('AZ login') {
         //     steps {
         //         script {
