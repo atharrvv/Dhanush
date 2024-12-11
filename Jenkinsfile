@@ -1,16 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Docker hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://keanu.azurecr.io', 'acr') {
-                        docker.image("eatherv/frontend:latest").push()
-                        docker.image("eatherv/backend:latest").push()
-                    }
-                }
-            }
-        }
         // stage ('AZ login') {
         //     steps {
         //         script {
@@ -29,16 +19,16 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('ACR Push') {
+        // stage('Docker hub') {
         //     steps {
         //         script {
-        //             sh """
-        //             docker push keanu.azurecr.io/frontend-h
-        //             docker push keanu.azurecr.io/backend-h
-        //             """
+        //             docker.withRegistry('https://keanu.azurecr.io', 'acr') {
+        //                 docker.image("eatherv/frontend:latest").push()
+        //                 docker.image("eatherv/backend:latest").push()
         //             }
         //         }
         //     }
+        // }
         // stage ('kubectl apply') {
         //     steps {
         //         script {
