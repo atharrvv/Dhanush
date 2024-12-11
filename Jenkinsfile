@@ -34,8 +34,8 @@ pipeline {
                 script {
                     withCredentials([azureServicePrincipal('azure_principle')]){
                         sh 'az aks get-credentials --resource-group group --name rolex'
-                        sh 'kubectl apply -f /tmp/backend-h.yaml'
-                        sh 'kubectl apply -f /tmp/frontend-h.yaml'
+                        sh 'kubectl apply -f /tmp/backend.yaml'
+                        sh 'kubectl apply -f /tmp/frontend.yaml'
                     }
                 }
             }
