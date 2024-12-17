@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: frontend
-    image: keanu.azurecr.io/frontend-trial
+    image: keanu.azurecr.io/frontend-h
     ports:
     - containerPort: 80
     env:
