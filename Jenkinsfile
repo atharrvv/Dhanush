@@ -11,24 +11,24 @@ pipeline {
                     }
                 }
             }
-        // stage('Build images') {
-        //     steps {
-        //         script {
-        //             docker.build('keanu.azurecr.io/frontend-h', './frontend')
-        //             docker.build('keanu.azurecr.io/backend-h', './backend')
-        //         }
-        //     }
-        // }
-        // stage('Docker hub') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry('https://keanu.azurecr.io', 'acr') {
-        //                 docker.image("keanu.azurecr.io/frontend:latest").push()
-        //                 docker.image("keanu.azurecr.io/backend:latest").push()
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Build images') {
+            steps {
+                script {
+                    docker.build('keanu.azurecr.io/frontend-h', './frontend')
+                    docker.build('keanu.azurecr.io/backend-h', './backend')
+                }
+            }
+        }
+        stage('Docker hub') {
+            steps {
+                script {
+                    docker.withRegistry('https://keanu.azurecr.io', 'acr') {
+                        docker.image("keanu.azurecr.io/frontend:latest").push()
+                        docker.image("keanu.azurecr.io/backend:latest").push()
+                    }
+                }
+            }
+        }
         stage ('kubectl apply') {
             steps {
                 script {
