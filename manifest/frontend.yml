@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: keanu.azurecr.io/frontend-h
+        ports:
+          - containerPort: 3000 # Replace with the port your frontend listens on
+        env:
+        - name: REACT_APP_API_BASE_URL
+          value: "http://backend-service:8080/api/products" # Internal URL for backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      name: front
+  type: ClusterIP
