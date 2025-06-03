@@ -9,6 +9,7 @@ Docker & ACR	Builds and pushes Docker images to Azure Container Registry (ACR)
 Kubernetes Deployment	Uses kubectl to apply manifests directly on Azure-managed Kubernetes
 Credential Management	Securely manages Azure credentials via Jenkins credentials binding
 📂 Pipeline Breakdown (Jenkinsfile)
+
 ✅ 1. Azure Login
 
     Authenticates to Azure using a service principal.
